@@ -2,6 +2,7 @@
 #include "public.h"
 #include "mosq.h"
 #include "test/test.h"
+#include "glm.hpp"
 using namespace std;
 
 

@@ -38,7 +38,8 @@ include_directories(${PROJECT_SOURCE_DIR})
 include_directories ("${PROJECT_SOURCE_DIR}/src/core/sdl/include")
 include_directories ("${PROJECT_SOURCE_DIR}/src/public")
 include_directories ("${PROJECT_SOURCE_DIR}/src/core/renderer")
-
+include_directories ("${PROJECT_SOURCE_DIR}/src/core/glm")
+include_directories ("${PROJECT_SOURCE_DIR}/src/core")
 
 #include_directories ("${PROJECT_SOURCE_DIR}/src/core")
 #include_directories ("${PROJECT_SOURCE_DIR}/src/ext")

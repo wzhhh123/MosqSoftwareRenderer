@@ -1,5 +1,3 @@
-
-
 #include "mosq.h"
 #include "../test/test.h"
 
