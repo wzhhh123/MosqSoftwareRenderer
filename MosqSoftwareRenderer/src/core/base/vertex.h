@@ -10,8 +10,11 @@ public:
 		float GetZ();
 
 		Vertex(float, float, float);
+		Vertex(glm::vec4 pos);
 
-		float triangleArea(Vertex a, Vertex b);
+		Vertex transform(glm::mat4 transform);
+		Vertex perspectiveDivide();
+		float triangleAreaTimesTwo(Vertex a, Vertex b);
 private:
-		glm::vec3 _pos;
+		glm::vec4 _pos;
 };

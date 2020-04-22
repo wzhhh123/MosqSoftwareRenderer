@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "mosq.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 void Mosq::init() {
 		SDL_Init(SDL_INIT_VIDEO);
@@ -53,12 +54,14 @@ void Mosq::drawScanBuffer(int yCoord, int xMin, int yMin) {
 		_scanBuffer[yCoord * 2 + 1] = yMin;
 }
 
+#include <algorithm>
 void Mosq::fillShape(int yMin, int yMax) {
+		yMin = std::max(0, yMin);
+		yMax = std::min(yMax, HEIGHT);
 		for (int j = yMin; j < yMax; ++j) 
 		{
 				int xMin = _scanBuffer[j * 2];
 				int xMax = _scanBuffer[j * 2 + 1];
-
 				for (int i = xMin; i < xMax; ++i) {
 						_renderTarget->setPixel(i, j, 0xff, 0xff, 0xff, 0xff);
 				}
@@ -89,18 +92,33 @@ void Mosq::scanConvertLine(Vertex minYVert, Vertex maxYVert, int whichSide){
 
 void Mosq::scanConvertTriangle(Vertex  minY, Vertex midY, Vertex maxY, int whichSide) {
 
-
 		scanConvertLine(minY, maxY, whichSide);
 		scanConvertLine(minY, midY, 1-whichSide);
 		scanConvertLine(midY, maxY, 1-whichSide);
 
 }
 
+glm::mat4 screenSpaceTransform() {
+		glm::mat4 m(0.0f);
+
+		//ndc的y是向上的，屏幕的y是向下的
+		m[0][0] = WIDTH / 2; m[0][1] = 0;                   m[0][2] = 0;  m[0][3] =0 ;
+		m[1][0] = 0;                m[1][1] = -HEIGHT / 2; m[1][2] = 0;  m[1][3] = 0; 
+		m[2][0] = 0;                m[2][1] = 0;                   m[2][2] = 1;  m[2][3] = 0;
+		m[3][0] = WIDTH / 2; m[3][1] = HEIGHT / 2;   m[3][2] = 0;  m[3][3] = 1;
+
+		return m;
+}
+
+
 void Mosq::fillTriangle(Vertex v1, Vertex v2, Vertex v3) {
 
-		Vertex minY = v1;
-		Vertex midY = v2;
-		Vertex maxY = v3;
+		static glm::mat4 transformToScreen = screenSpaceTransform();
+
+		Vertex minY = v1.transform(transformToScreen);
+		Vertex midY = v2.transform(transformToScreen);
+		Vertex maxY = v3.transform(transformToScreen);
+
 
 		if (minY.GetY() > midY.GetY()) {
 				auto temp = minY;
@@ -123,8 +141,8 @@ void Mosq::fillTriangle(Vertex v1, Vertex v2, Vertex v3) {
 		//int whichSide = maxY.GetX() >= midY.GetX();
 		//右手坐标系中z向屏幕内，(x向右y向下，则z向屏幕内)，所以用右手判断顺时针是正向
 		//即方向是min->max->mid顺时针时为正，这时候min->max是右边界，要填在xEnd的位置。
-		int whichSide = minY.triangleArea(maxY, midY) >= 0 ? 1 : 0;
-		scanConvertTriangle(minY, midY, maxY, 1);
+		int whichSide = minY.triangleAreaTimesTwo(maxY, midY) >= 0 ? 1 : 0;
+		scanConvertTriangle(minY, midY, maxY, whichSide);
 		fillShape((int)minY.GetY(), (int)maxY.GetY());
 }
 
