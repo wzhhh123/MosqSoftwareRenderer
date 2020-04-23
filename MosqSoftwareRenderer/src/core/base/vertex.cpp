@@ -15,27 +15,31 @@ float Vertex::GetZ() {
 }
 
 
-Vertex::Vertex(float x, float y, float z) {
+Vertex::Vertex(float x, float y, float z, glm::vec4 texCoord) {
 		_pos.x = x;
 		_pos.y = y;
 		_pos.z = z;
 		_pos.w = 1;
+		_texCoord = texCoord;
 }
 
 
-Vertex::Vertex(glm::vec4 pos) {
+Vertex::Vertex(glm::vec4 pos, glm::vec4 texCoord) {
 		_pos = pos;
+		_texCoord = texCoord;
 }
 
+
+glm::vec4 Vertex::getTexCoord() { return _texCoord; }
 
 Vertex Vertex::transform(glm::mat4 transform) {
 		auto pos = transform * _pos;
-		auto val =  Vertex(pos);
+		auto val = Vertex(pos, _texCoord);
 		return val;
 }
 
 Vertex Vertex::perspectiveDivide() {
-		return Vertex(_pos / _pos.w);
+		return Vertex(_pos / _pos.w, _texCoord);
 }
 
 float Vertex::triangleAreaTimesTwo(Vertex a, Vertex b) {

@@ -10,6 +10,8 @@ class Effect;
 class Start;
 class Vertex;
 class Triangle;
+class Edge;
+class Gradients;
 
 #include "tool.h"
 #include <iostream>
@@ -23,6 +25,8 @@ class Triangle;
 #include "start.h"
 #include "vertex.h"
 #include "triangle.h"
+#include "edge.h"
+#include "gradients.h"
 
 const int WIDTH = 800;
 const int HEIGHT = 500;
