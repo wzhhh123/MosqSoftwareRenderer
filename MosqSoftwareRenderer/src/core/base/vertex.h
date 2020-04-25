@@ -24,6 +24,7 @@ public:
 
 		Vertex lerp(Vertex to, Mosq_Float t);
 		
+		bool isClip;
 private:
 		glm::vec4 _pos;
 		glm::vec4 _texCoord;

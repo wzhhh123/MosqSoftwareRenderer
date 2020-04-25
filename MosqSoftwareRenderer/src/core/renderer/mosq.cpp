@@ -20,6 +20,7 @@ void Mosq::init() {
 				SDL_Quit();
 				exit(-1);
 		}
+		SDL_ShowCursor(false);
 		_renderTarget.reset(new RenderTarget((Uint32*)surface->pixels));
 		_renderTarget->clear(0x80, 0x80, 0x80, 1, 1);
 		_startEffect.reset(new Start(4096, 1.0f, 0.001f));
@@ -296,10 +297,10 @@ void clip(std::vector<Vertex>&output) {
 				for (int j = 0; j < input.size(); ++j) {
 						auto curPoint = input[j];
 						auto prePoint = input[(j - 1 + input.size()) % input.size()];
-						float curDis = curPoint.GetX() * face[i].x + curPoint.GetY() * face[i].y + curPoint.GetX() * face[i].z + curPoint.GetW() * face[i].w;
+						float curDis = curPoint.GetX() * face[i].x + curPoint.GetY() * face[i].y + curPoint.GetZ() * face[i].z + curPoint.GetW() * face[i].w;
 						float preDis = prePoint.GetX() * face[i].x + prePoint.GetY() * face[i].y + prePoint.GetZ() * face[i].z + prePoint.GetW() * face[i].w;
-
-						if (curDis * preDis < 0)
+						if (curDis < 0 && preDis < 0) continue;
+						if( !(curDis >= 0 && preDis >= 0))
 						{
 								float t = abs(preDis) / (abs(preDis) + abs(curDis));
 								auto intersetPoint = prePoint.lerp(curPoint, t);
@@ -321,7 +322,7 @@ void Mosq::drawTriangleList(std::vector<Vertex>vertices, glm::mat4 mat, SDL_Surf
 		for (int i = 0; i < len; i+=3) {
 				std::vector<Vertex>temp{ vertices[i], vertices[i + 1], vertices[i + 2] };
 				clip(temp);
-				if (temp.size() > 0) {
+				if (temp.size() >= 3) {
 						vertices[i] = temp[0];
 						vertices[i + 1] = temp[1];
 						vertices[i + 2] = temp[2];
@@ -331,15 +332,23 @@ void Mosq::drawTriangleList(std::vector<Vertex>vertices, glm::mat4 mat, SDL_Surf
 								vertices.push_back(temp[j]);
 						}
 				}
+				else {
+						vertices[i].isClip = true;
+						vertices[i + 1].isClip = true;
+						vertices[i + 2].isClip = true;
+				}
 		}
 
 		for (int i = 0; i < vertices.size(); i += 3) {
-				Mosq::getInstance()->fillTriangle(
-						vertices[i],
-						vertices[i + 1],
-						vertices[i + 2],
-						image
-				);
+				if ((vertices[i].isClip && vertices[i + 1].isClip && vertices[i + 2].isClip) == false
+						&& vertices[i].triangleAreaTimesTwo(vertices[i+1], vertices[i + 2]) > 0) {
+						Mosq::getInstance()->fillTriangle(
+								vertices[i],
+								vertices[i + 1],
+								vertices[i + 2],
+								image
+						);
+				}
 		}
 }
 

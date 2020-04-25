@@ -18,7 +18,7 @@ Mosq_Float Vertex::GetW() {
 		return _pos.w;
 }
 
-Vertex::Vertex() {
+Vertex::Vertex():isClip(false) {
 		
 }
 
@@ -28,7 +28,7 @@ Vertex Vertex::lerp(Vertex to, Mosq_Float t) {
 }
 
 
-Vertex::Vertex(Mosq_Float x, Mosq_Float y, Mosq_Float z, glm::vec4 texCoord) {
+Vertex::Vertex(Mosq_Float x, Mosq_Float y, Mosq_Float z, glm::vec4 texCoord) :isClip(false) {
 		_pos.x = x;
 		_pos.y = y;
 		_pos.z = z;
@@ -36,7 +36,7 @@ Vertex::Vertex(Mosq_Float x, Mosq_Float y, Mosq_Float z, glm::vec4 texCoord) {
 		_texCoord = texCoord;
 }
 
-Vertex::Vertex(Mosq_Float x, Mosq_Float y , Mosq_Float z, Mosq_Float w, glm::vec4 texCoord) {
+Vertex::Vertex(Mosq_Float x, Mosq_Float y , Mosq_Float z, Mosq_Float w, glm::vec4 texCoord) :isClip(false) {
 		_pos.x = x;
 		_pos.y = y;
 		_pos.z = z;
@@ -46,7 +46,7 @@ Vertex::Vertex(Mosq_Float x, Mosq_Float y , Mosq_Float z, Mosq_Float w, glm::vec
 
 
 
-Vertex::Vertex(glm::vec4 pos, glm::vec4 texCoord) {
+Vertex::Vertex(glm::vec4 pos, glm::vec4 texCoord) :isClip(false) {
 		_pos = pos;
 		_texCoord = texCoord;
 }
