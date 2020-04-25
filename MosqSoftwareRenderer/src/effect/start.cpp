@@ -1,7 +1,7 @@
 #include "start.h"
 #include <ctime>
 
-Start::Start(int num, float spread, float speed) : _startPos(num){
+Start::Start(int num, Mosq_Float spread, Mosq_Float speed) : _startPos(num){
 		_spread = spread;
 		_speed = speed;
 
@@ -20,14 +20,14 @@ void Start::initStart(int index) {
 void Start::updateAndRender(std::shared_ptr<RenderTarget> rt) {
 		static int a = 0;
 		//if (a++ > 0) return;
-		rt->clear(0, 0, 0, 0);
+		rt->clear(0, 0, 0, 0, 1);
 
-		float halfWidth = WIDTH / 2.0f;
-		float halfHeight = HEIGHT / 2.0f;
+		Mosq_Float halfWidth = WIDTH / 2.0f;
+		Mosq_Float halfHeight = HEIGHT / 2.0f;
 
 
 		for(int i = 0; i < _startPos.size(); ++i){
-				_startPos[i].z -= Timer::deltaTime *_speed;
+				_startPos[i].z -= Timer::deltaTimeS *_speed;
 				if (_startPos[i].z < 1e-6) {
 						initStart(i);
 				}

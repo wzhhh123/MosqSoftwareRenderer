@@ -2,8 +2,10 @@
 
 #include "timer.h"
 
-Uint32 Timer::deltaTime = 0;
+Uint32 Timer::deltaTimeS = 0;
 Uint32 Timer::fps = 0;
+
+float Timer::deltaTimeMS = 0;
 
 void Timer::init() {
 		_lastFrame = 0;
@@ -14,11 +16,12 @@ void Timer::update() {
 		static Uint32 tickCnt = 0;
 
 		Uint32 temp = SDL_GetTicks();
-		deltaTime = temp - _lastFrame;
+		deltaTimeS = temp - _lastFrame;
+		deltaTimeMS = deltaTimeS / 1000.0f;
 		_lastFrame = temp;
 
 		frameCnt++;
-		tickCnt += deltaTime;
+		tickCnt += deltaTimeS;
 		if (tickCnt >= 1000) {
 				fps = frameCnt;
 				frameCnt = 0;

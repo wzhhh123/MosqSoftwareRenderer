@@ -9,12 +9,12 @@
 class Start :public Effect{
 
 private:
-		float _spread;
-		float _speed;
+		Mosq_Float _spread;
+		Mosq_Float _speed;
 		std::vector<glm::vec3>_startPos;
 		void initStart(int index);
 public:
-		Start(int num, float spread, float speed);
+		Start(int num, Mosq_Float spread, Mosq_Float speed);
 		
 		void updateAndRender(std::shared_ptr<RenderTarget>);
 };

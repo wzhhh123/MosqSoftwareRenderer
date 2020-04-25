@@ -10,6 +10,8 @@ int main(int argc, char *argv[]) {
 		rendererInstance->init();
 		Timer* timerInstance = Timer::getInstance();
 		timerInstance->init();
+		Camera* cameraInstance = Camera::getInstance();
+		cameraInstance->init();
 		rendererInstance->render();
 		rendererInstance->dispose();
 		

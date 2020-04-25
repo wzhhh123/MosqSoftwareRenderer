@@ -8,8 +8,10 @@ public:
 		void init();
 		void dispose();
 		void update();
-		static Uint32 deltaTime;
+		static Uint32 deltaTimeS;
 		static Uint32 fps;
+		static float deltaTimeMS;
+
 private:
 		Uint32 _lastFrame;
 		Timer();

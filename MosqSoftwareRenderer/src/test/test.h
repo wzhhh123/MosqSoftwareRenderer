@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../public/public.h"
+#include "public.h"
 
 namespace Test {
 	void testAll();
