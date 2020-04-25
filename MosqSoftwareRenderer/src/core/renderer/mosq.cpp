@@ -277,6 +277,73 @@ void Mosq::dispose() {
 		SDL_Quit();
 }
 
+void clip(std::vector<Vertex>&output) {
+
+		std::vector<Vertex>input;
+		std::vector<glm::vec4> face{
+		   glm::vec4(1,0,0,1),
+		   glm::vec4(0,1,0,1),
+		   glm::vec4(0,0,1,1),
+		   glm::vec4(-1,0,0,1),
+		   glm::vec4(0,-1,0,1),
+		   glm::vec4(0,0,-1,1),
+		};
+		for (int i = 0; i < face.size(); ++i) {
+				auto temp = output;
+				output = input;
+				input = temp;
+				output.clear();
+				for (int j = 0; j < input.size(); ++j) {
+						auto curPoint = input[j];
+						auto prePoint = input[(j - 1 + input.size()) % input.size()];
+						float curDis = curPoint.GetX() * face[i].x + curPoint.GetY() * face[i].y + curPoint.GetX() * face[i].z + curPoint.GetW() * face[i].w;
+						float preDis = prePoint.GetX() * face[i].x + prePoint.GetY() * face[i].y + prePoint.GetZ() * face[i].z + prePoint.GetW() * face[i].w;
+
+						if (curDis * preDis < 0)
+						{
+								float t = abs(preDis) / (abs(preDis) + abs(curDis));
+								auto intersetPoint = prePoint.lerp(curPoint, t);
+								output.push_back(intersetPoint);
+						}
+						if (curDis >= 0) output.push_back(curPoint);
+				}
+		}
+}
+
+void Mosq::drawTriangleList(std::vector<Vertex>vertices, glm::mat4 mat, SDL_Surface* image) {
+
+
+		for (int i = 0; i < vertices.size(); i ++) {
+				vertices[i] = vertices[i].transform(mat);
+		}
+
+		int len = vertices.size();
+		for (int i = 0; i < len; i+=3) {
+				std::vector<Vertex>temp{ vertices[i], vertices[i + 1], vertices[i + 2] };
+				clip(temp);
+				if (temp.size() > 0) {
+						vertices[i] = temp[0];
+						vertices[i + 1] = temp[1];
+						vertices[i + 2] = temp[2];
+						for (int j = 3; j < temp.size(); ++j) {
+								vertices.push_back(temp[0]);
+								vertices.push_back(temp[j - 1]);
+								vertices.push_back(temp[j]);
+						}
+				}
+		}
+
+		for (int i = 0; i < vertices.size(); i += 3) {
+				Mosq::getInstance()->fillTriangle(
+						vertices[i],
+						vertices[i + 1],
+						vertices[i + 2],
+						image
+				);
+		}
+}
+
+
 Mosq::Mosq():_scanBuffer(2*HEIGHT) {}
 Mosq::~Mosq() {}
 

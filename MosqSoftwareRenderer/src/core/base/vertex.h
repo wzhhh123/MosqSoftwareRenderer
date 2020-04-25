@@ -22,6 +22,8 @@ public:
 		Vertex perspectiveDivide();
 		Mosq_Float triangleAreaTimesTwo(Vertex a, Vertex b);
 
+		Vertex lerp(Vertex to, Mosq_Float t);
+		
 private:
 		glm::vec4 _pos;
 		glm::vec4 _texCoord;

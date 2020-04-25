@@ -5,6 +5,7 @@
 #include "public.h"
 #include <vector>
 #include<memory>
+#include "glm/gtc/matrix_transform.hpp"
 
 class Mosq : public Singleton<Mosq>{
 		friend class Singleton <Mosq>;
@@ -16,6 +17,7 @@ public:
 		void scanTriangle(Vertex minY, Vertex midY, Vertex maxY, bool whichSide, SDL_Surface* image);
 		void fillShape(int yMin, int yMax);
 		void fillTriangle(Vertex v1, Vertex v2, Vertex v3, SDL_Surface* image);
+		void drawTriangleList(std::vector<Vertex>vertices, glm::mat4 mat, SDL_Surface* image);
 		
 private:
 		Mosq();

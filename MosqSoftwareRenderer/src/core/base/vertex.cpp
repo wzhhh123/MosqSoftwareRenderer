@@ -19,8 +19,14 @@ Mosq_Float Vertex::GetW() {
 }
 
 Vertex::Vertex() {
-
+		
 }
+
+Vertex Vertex::lerp(Vertex to, Mosq_Float t) {
+		Vertex res(_pos*(1 - t) + t * to._pos, _texCoord*(1 - t) + t * to._texCoord);
+		return res;
+}
+
 
 Vertex::Vertex(Mosq_Float x, Mosq_Float y, Mosq_Float z, glm::vec4 texCoord) {
 		_pos.x = x;

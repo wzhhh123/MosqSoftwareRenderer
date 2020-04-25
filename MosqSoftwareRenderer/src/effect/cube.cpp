@@ -72,19 +72,14 @@ void Cube::updateAndRender(std::shared_ptr<RenderTarget> rt) {
 		glm::mat4 rotation = glm::rotate(scale, angle, glm::vec3((Mosq_Float)0, (Mosq_Float)1, (Mosq_Float)0));
 		//glm::mat4 lookat = glm::lookAt(glm::vec3(3, 3, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
 		glm::mat4 lookat = Camera::getInstance()->getViewMatrix();
-		glm::mat4 projection = glm::perspective(glm::radians(30.0f), (Mosq_Float)WIDTH / HEIGHT, 0.3f, 1000.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(30.0f), (Mosq_Float)WIDTH / HEIGHT, 0.3f, 15.0f);
 
 
 		static SDL_Surface* image = loadBmp("../res/block.bmp");
 		static std::vector<Vertex> vertices = getCubeVertexList();
 		auto mat = projection * lookat * rotation;
 
-		for (int i = 0; i < vertices.size(); i += 3) {
-				Mosq::getInstance()->fillTriangle(
-						vertices[i].transform(mat),
-						vertices[i+1].transform(mat),
-						vertices[i+2].transform(mat),
-						image
-				);
-		}
+		Mosq::getInstance()->drawTriangleList(vertices, mat, image);
+
+	
 }
