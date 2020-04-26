@@ -14,6 +14,5 @@ int main(int argc, char *argv[]) {
 		cameraInstance->init();
 		rendererInstance->render();
 		rendererInstance->dispose();
-		
 		return 0;
 }

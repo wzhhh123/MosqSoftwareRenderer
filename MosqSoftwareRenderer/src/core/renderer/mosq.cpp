@@ -216,6 +216,11 @@ void Mosq::fillTriangle(Vertex v1, Vertex v2, Vertex v3, SDL_Surface* image) {
 		Vertex midY = v2.transform(transformToScreen).perspectiveDivide();
 		Vertex maxY = v3.transform(transformToScreen).perspectiveDivide();
 
+		//±³ÃæÌÞ³ý ÄæÊ±Õë
+		if (minY.triangleAreaTimesTwo(maxY,midY) <= 0) {
+				return;
+		}
+
 		if (minY.GetY() > midY.GetY()) {
 				auto temp = minY;
 				minY = midY;
@@ -340,8 +345,7 @@ void Mosq::drawTriangleList(std::vector<Vertex>vertices, glm::mat4 mat, SDL_Surf
 		}
 
 		for (int i = 0; i < vertices.size(); i += 3) {
-				if ((vertices[i].isClip && vertices[i + 1].isClip && vertices[i + 2].isClip) == false
-						&& vertices[i].triangleAreaTimesTwo(vertices[i+1], vertices[i + 2]) > 0) {
+				if ((vertices[i].isClip && vertices[i + 1].isClip && vertices[i + 2].isClip) == false) {
 						Mosq::getInstance()->fillTriangle(
 								vertices[i],
 								vertices[i + 1],
@@ -356,6 +360,3 @@ void Mosq::drawTriangleList(std::vector<Vertex>vertices, glm::mat4 mat, SDL_Surf
 Mosq::Mosq():_scanBuffer(2*HEIGHT) {}
 Mosq::~Mosq() {}
 
-//Mosq::Mosq(const Mosq&) {}
-//
-//void Mosq::operator=(const Mosq&) {}
